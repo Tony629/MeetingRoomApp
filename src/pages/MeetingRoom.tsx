@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import {
     Typography,
     Button,
     Drawer,
     TextField,
     Grid,
+    Grid2,
     Select,
     MenuItem,
     FormControl,
@@ -17,7 +18,8 @@ import {
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import DeleteIcon from '@mui/icons-material/Delete'
-import EditIcon from '@mui/icons-material/Edit'
+import EditIcon from '@mui/icons-material/Edit';
+import dayjs from 'dayjs';
 
 interface MeetingRoomProps {
     id: number
@@ -28,6 +30,11 @@ interface MeetingRoomProps {
     type: 'Conference' | 'Private' | 'Open'
     availableTime: [string, string]
     mark: string
+}
+
+interface MeetingRoomEffectiveDateProps {
+    startDate: dayjs.Dayjs | null;
+    endDate: dayjs.Dayjs | null;
 }
 
 export default function MeetingRoom() {
@@ -56,21 +63,21 @@ export default function MeetingRoom() {
         {
             id: 3,
             meetingRoomNo: 'MR103',
-            meetingRoomName: 'Private Room A',
+            meetingRoomName: 'Lombok Island',
             seating: 5,
             status: 'Occupied',
             type: 'Conference',
-            availableTime: ['2025-01-24', '2025-01-25'],
+            availableTime: ['2024-01-01', '2025-01-01'],
             mark: 'Cozy private meeting space',
         },
         {
             id: 4,
             meetingRoomNo: 'MR103',
-            meetingRoomName: 'Private Room A',
+            meetingRoomName: 'Taiwan',
             seating: 5,
             status: 'Occupied',
             type: 'Conference',
-            availableTime: ['2025-01-24', '2025-01-25'],
+            availableTime: ['2025-01-01', '2025-01-30'],
             mark: 'Cozy private meeting space',
         }
     ])
@@ -78,10 +85,32 @@ export default function MeetingRoom() {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
     const [currentMeetRoom, setCurrentMeetRoom] = useState<Partial<MeetingRoomProps> | null>(null)
     const [availableTime, setAvailableTime] = useState<[string | null, string | null]>([null, null])
+    const [meetingRoomEffectiveDate, setMeetingRoomEffectiveDate] = useState<MeetingRoomEffectiveDateProps | null>(null);
 
-    const openDrawer = (room: Partial<MeetingRoomProps> | null) => {
+    const handleStartDateChange = (date: dayjs.Dayjs | null) => {
+        if (date) {
+            const formattedDate = date.format('YYYY-MM-DD');
+            setAvailableTime([formattedDate, availableTime[1]])
+        }
+    };
+
+    const handleEndDateChange = (date: dayjs.Dayjs | null) => {
+        if (date) {
+            const formattedDate = date.format('YYYY-MM-DD');
+            setAvailableTime([availableTime[0], formattedDate])
+        }
+    };
+
+    const openDrawer = (room: MeetingRoomProps | null) => {
         setCurrentMeetRoom(room)
-        setAvailableTime(room?.availableTime || [null, null])
+
+        if (room) {
+            setMeetingRoomEffectiveDate({
+                startDate: dayjs(room.availableTime[0]),
+                endDate: dayjs(room.availableTime[1]),
+            });
+        }
+
         setIsDrawerOpen(true)
     }
 
@@ -201,26 +230,18 @@ export default function MeetingRoom() {
                         </Select>
                     </FormControl>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                            label="Start Date"
-                            value={availableTime[0]}
-                            onChange={(date: any) => setAvailableTime([date?.toISOString().split('T')[0] || null, availableTime[1]])}
-                            slots={{
-                                textField: (params) => (
-                                    <TextField {...params} fullWidth margin="normal" />
-                                ),
-                            }}
-                        />
-                        <DatePicker
-                            label="End Date"
-                            value={availableTime[1]}
-                            onChange={(date: any) => setAvailableTime([availableTime[0], date?.toISOString().split('T')[0] || null])}
-                            slots={{
-                                textField: (params) => (
-                                    <TextField {...params} fullWidth margin="normal" />
-                                ),
-                            }}
-                        />
+                        <Box display="grid" gridTemplateColumns="1fr 1fr" gap={2}>
+                            <DatePicker
+                                label="Start Date"
+                                value={meetingRoomEffectiveDate?.startDate}
+                                onChange={(newValue: any) => handleStartDateChange(newValue)}
+                            />
+                            <DatePicker
+                                label="End Date"
+                                value={meetingRoomEffectiveDate?.endDate}
+                                onChange={(newValue: any) => handleEndDateChange(newValue)}
+                            />
+                        </Box>
                     </LocalizationProvider>
                     <TextField
                         label="Mark"
