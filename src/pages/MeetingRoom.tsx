@@ -37,8 +37,9 @@ interface MeetingRoomEffectiveDateProps {
     endDate: dayjs.Dayjs | null;
 }
 
-export default function MeetingRoom() {
 
+
+export default function MeetingRoom() {
     const [meetRooms, setMeetRooms] = useState<MeetingRoomProps[]>([
         {
             id: 1,
@@ -48,7 +49,7 @@ export default function MeetingRoom() {
             status: 'Available',
             type: 'Conference',
             availableTime: ['2025-01-22', '2025-01-23'],
-            mark: 'Spacious room with projector',
+            mark: 'Spacious room',
         },
         {
             id: 2,
