@@ -171,7 +171,7 @@ export default function MeetingRoom() {
                                 component="img"
                                 alt={`Cover of ${room.meetingRoomName}`}
                                 width="300"
-                                height="200"
+                                height="300"
                                 image={`/cover/${room.coverImage}`}
                             />
                             <CardContent>
