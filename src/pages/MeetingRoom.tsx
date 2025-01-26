@@ -5,7 +5,6 @@ import {
     Drawer,
     TextField,
     Grid,
-    Grid2,
     Select,
     MenuItem,
     FormControl,
@@ -14,6 +13,7 @@ import {
     Card,
     CardContent,
     IconButton,
+    CardMedia
 } from '@mui/material'
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
@@ -28,7 +28,8 @@ interface MeetingRoomProps {
     seating: number
     status: 'Available' | 'Occupied'
     type: 'Conference' | 'Private' | 'Open'
-    availableTime: [string, string]
+    availableTime: [string, string],
+    coverImage: string,
     mark: string
 }
 
@@ -44,21 +45,23 @@ export default function MeetingRoom() {
         {
             id: 1,
             meetingRoomNo: 'MR101',
-            meetingRoomName: 'Phuket Island',
+            meetingRoomName: 'Phuket Island - 普吉岛',
             seating: 20,
             status: 'Available',
             type: 'Conference',
             availableTime: ['2025-01-22', '2025-01-23'],
+            coverImage: "MeetingRoom1.jpg",
             mark: 'Spacious room',
         },
         {
             id: 2,
             meetingRoomNo: 'MR102',
-            meetingRoomName: 'Koh Samui',
+            meetingRoomName: 'Koh Samui - 苏梅岛',
             seating: 15,
             status: 'Occupied',
             type: 'Conference',
             availableTime: ['2025-01-24', '2025-01-25'],
+            coverImage: "MeetingRoom2.png",
             mark: 'Cozy private meeting space',
         },
         {
@@ -69,16 +72,18 @@ export default function MeetingRoom() {
             status: 'Occupied',
             type: 'Conference',
             availableTime: ['2024-01-01', '2025-01-01'],
+            coverImage: "MeetingRoom3.jpg",
             mark: 'Cozy private meeting space',
         },
         {
             id: 4,
             meetingRoomNo: 'MR103',
-            meetingRoomName: 'Taiwan',
+            meetingRoomName: 'Taiwan - 天安门会议室',
             seating: 5,
             status: 'Occupied',
             type: 'Conference',
             availableTime: ['2025-01-01', '2025-01-30'],
+            coverImage: "MeetingRoom4.jpg",
             mark: 'Cozy private meeting space',
         }
     ])
@@ -132,12 +137,14 @@ export default function MeetingRoom() {
             status: currentMeetRoom.status || 'Available',
             type: currentMeetRoom.type || 'Conference',
             availableTime: [availableTime[0] || '', availableTime[1] || ''] as [string, string],
+            coverImage: currentMeetRoom.coverImage || '',
             mark: currentMeetRoom.mark || '',
         }
 
         if (currentMeetRoom.id) {
             setMeetRooms((prev) => prev.map((room) => (room.id === currentMeetRoom.id ? updatedMeetRoom : room)))
         } else {
+            updatedMeetRoom.coverImage = "MeetingRoom2.png";
             setMeetRooms((prev) => [...prev, updatedMeetRoom])
         }
 
@@ -160,22 +167,38 @@ export default function MeetingRoom() {
                 {meetRooms.map((room) => (
                     <Grid item xs={12} md={6} key={room.id}>
                         <Card>
+                            <CardMedia
+                                component="img"
+                                alt={`Cover of ${room.meetingRoomName}`}
+                                width="300"
+                                height="200"
+                                image={`/cover/${room.coverImage}`}
+                            />
                             <CardContent>
-                                <Typography variant="h6">{room.meetingRoomName}</Typography>
-                                <Typography>Room No: {room.meetingRoomNo}</Typography>
-                                <Typography>Seating: {room.seating}</Typography>
-                                <Typography>Status: {room.status}</Typography>
-                                <Typography>Type: {room.type}</Typography>
-                                <Typography>
-                                    Available Time: {room.availableTime[0]} to {room.availableTime[1]}
-                                </Typography>
-                                <Typography>Mark: {room.mark}</Typography>
-                                <IconButton>
-                                    <EditIcon onClick={() => openDrawer(room)} />
-                                </IconButton>
-                                <IconButton>
-                                    <DeleteIcon onClick={() => handleDelete(room.id)} />
-                                </IconButton>
+                                <Grid container justifyContent="space-between" alignItems="flex-start">
+                                    <Grid item xs={8}>
+                                        <Typography variant="h6">{room.meetingRoomName}</Typography>
+                                        <Typography>Room No: {room.meetingRoomNo}</Typography>
+                                        <Typography>Seating: {room.seating}</Typography>
+                                        <Typography>Status: {room.status}</Typography>
+                                        <Typography>Type: {room.type}</Typography>
+                                    </Grid>
+                                    <Box
+                                        sx={{
+                                            position: 'relative',
+                                            bottom: -100,
+                                            right: 16
+                                        }}
+                                    >
+                                        <IconButton onClick={() => openDrawer(room)} color="primary">
+                                            <EditIcon />
+                                        </IconButton>
+                                        <IconButton onClick={() => handleDelete(room.id)} color="secondary">
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </Box>
+
+                                </Grid>
                             </CardContent>
                         </Card>
                     </Grid>
