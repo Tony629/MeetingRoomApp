@@ -1,4 +1,4 @@
-# A MeetingRoomApp build by React + TypeScript + MUI
+# A MeetingRoom App build by React + TypeScript + MUI
 
 - Overall
 - MeetingRoom
