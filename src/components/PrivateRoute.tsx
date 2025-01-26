@@ -20,6 +20,13 @@ export default function PrivateRoute() {
                 </Toolbar>
             </AppBar>
             <Outlet />
+            <br />
+
+            <footer style={{ backgroundColor: '#f1f1f1', padding: '10px', textAlign: 'center', position: 'relative', bottom: 0, width: '100%' }}>
+                <Typography variant="body2" color="textSecondary">
+                    © 2025 悟能会议室预约管理系统. All rights reserved.
+                </Typography>
+            </footer>
         </>
     )
 }
