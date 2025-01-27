@@ -1,13 +1,16 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import Cookies from 'js-cookie';
 
-export default function PrivateRoute({ element, ...rest }: any) {
+
+export default function PrivateRoute({ children }: any) {
     const { isLoggedIn } = useAuth();
+    const location = useLocation();
 
-    const isAuthenticated = Cookies.get('isAuthenticated');
+    console.log("isLoggedIn:" + isLoggedIn);
 
-    console.log("isLoggedIn:" + isAuthenticated);
+    if (!isLoggedIn) {
+        return <Navigate to="/login" state={{ from: location }} replace />
+    }
 
-    return isLoggedIn ? element : <Navigate to="/login" />
+    return children;
 }

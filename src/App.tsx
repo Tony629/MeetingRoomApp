@@ -14,7 +14,11 @@ function App() {
       <Container>
         <Routes>
           <Route path='/login' element={<Login />} />
-          <Route element={<ProtectedRoute element={<Layout />} />}>
+          <Route element={
+            <ProtectedRoute>
+              <Layout />
+            </ProtectedRoute>
+          }>
             <Route path="/" element={<Home />} />
             <Route path="/meeting-room" element={<MeetingRoom />} />
             <Route path="/user" element={<User />} />
