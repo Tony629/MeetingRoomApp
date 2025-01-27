@@ -1,12 +1,7 @@
-import { Navigate, Outlet } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import { CssBaseline, AppBar, Toolbar, Typography, Button } from '@mui/material'
+import { Outlet } from "react-router-dom";
+import { CssBaseline, AppBar, Toolbar, Typography, Button } from '@mui/material';
 
-export default function PrivateRoute() {
-    const { isLoggedIn } = useAuth();
-
-    if (!isLoggedIn) return <Navigate to="/login" />
-
+export default function Layout() {
     return (
         <>
             <CssBaseline />
